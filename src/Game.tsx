@@ -31,10 +31,10 @@ interface GameProps {
   keyboardLayout: string;
 }
 
-const targets = targetList.slice(0, targetList.indexOf("murky") + 1); // Words no rarer than this one
-const minLength = 4;
+const targets = targetList.slice(0, targetList.indexOf("zubar") + 1); // Words no rarer than this one
+const minLength = 5;
 const defaultLength = 5;
-const maxLength = 11;
+const maxLength = 5;
 const limitLength = (n: number) =>
   n >= minLength && n <= maxLength ? n : defaultLength;
 
@@ -44,6 +44,7 @@ function randomTarget(wordLength: number): string {
   do {
     candidate = pick(eligible);
   } while (/\*/.test(candidate));
+  console.log(candidate)
   return candidate;
 }
 
@@ -99,8 +100,8 @@ function Game(props: GameProps) {
   });
   const [hint, setHint] = useState<string>(
     challengeError
-      ? `Invalid challenge string, playing random game.`
-      : `Make your first guess!`
+      ? `Ukendt challenge id, tager et tilfældigt spil.`
+      : `Lav dit første gæt!`
   );
   const currentSeedParams = () =>
     `?seed=${seed}&length=${wordLength}&game=${gameNumber}`;
@@ -175,11 +176,11 @@ function Game(props: GameProps) {
       setHint("");
     } else if (key === "Enter") {
       if (currentGuess.length !== wordLength) {
-        setHint("Too short");
+        setHint("For kort");
         return;
       }
       if (!dictionary.includes(currentGuess)) {
-        setHint("Not a valid word");
+        setHint("Er ikke en fodbold spiller");
         return;
       }
       for (const g of guesses) {
@@ -261,41 +262,41 @@ function Game(props: GameProps) {
   return (
     <div className="Game" style={{ display: props.hidden ? "none" : "block" }}>
       <div className="Game-options">
-        <label htmlFor="wordLength">Letters:</label>
-        <input
-          type="range"
-          min={minLength}
-          max={maxLength}
-          id="wordLength"
-          disabled={
-            gameState === GameState.Playing &&
-            (guesses.length > 0 || currentGuess !== "" || challenge !== "")
-          }
-          value={wordLength}
-          onChange={(e) => {
-            const length = Number(e.target.value);
-            resetRng();
-            setGameNumber(1);
-            setGameState(GameState.Playing);
-            setGuesses([]);
-            setCurrentGuess("");
-            setTarget(randomTarget(length));
-            setWordLength(length);
-            setHint(`${length} letters`);
-          }}
-        ></input>
+        {/*<label htmlFor="wordLength">Letters:</label>*/}
+        {/*<input*/}
+        {/*  type="range"*/}
+        {/*  min={minLength}*/}
+        {/*  max={maxLength}*/}
+        {/*  id="wordLength"*/}
+        {/*  disabled={*/}
+        {/*    gameState === GameState.Playing &&*/}
+        {/*    (guesses.length > 0 || currentGuess !== "" || challenge !== "")*/}
+        {/*  }*/}
+        {/*  value={wordLength}*/}
+        {/*  onChange={(e) => {*/}
+        {/*    const length = Number(e.target.value);*/}
+        {/*    resetRng();*/}
+        {/*    setGameNumber(1);*/}
+        {/*    setGameState(GameState.Playing);*/}
+        {/*    setGuesses([]);*/}
+        {/*    setCurrentGuess("");*/}
+        {/*    setTarget(randomTarget(length));*/}
+        {/*    setWordLength(length);*/}
+        {/*    setHint(`${length} letters`);*/}
+        {/*  }}*/}
+        {/*></input>*/}
         <button
           style={{ flex: "0 0 auto" }}
           disabled={gameState !== GameState.Playing || guesses.length === 0}
           onClick={() => {
             setHint(
-              `The answer was ${target.toUpperCase()}. (Enter to play again)`
+              `Det rigtige svar var: ${target.toUpperCase()}. (Tryk på <enter> for at spille igen)`
             );
             setGameState(GameState.Lost);
             (document.activeElement as HTMLElement)?.blur();
           }}
         >
-          Give up
+          Giv op!
         </button>
       </div>
       <table
@@ -322,18 +323,18 @@ function Game(props: GameProps) {
       />
       <div className="Game-seed-info">
         {challenge
-          ? "playing a challenge game"
+          ? "Du har modtaget en udfordring"
           : seed
-          ? `${describeSeed(seed)} — length ${wordLength}, game ${gameNumber}`
-          : "playing a random game"}
+          ? `${describeSeed(seed)} — game ${gameNumber}`
+          : "spiller et tilfældigt spil"}
       </div>
       <p>
         <button
           onClick={() => {
-            share("Link copied to clipboard!");
+            share("Link kopieret!");
           }}
         >
-          Share a link to this game
+          Del et link til dette spil
         </button>{" "}
         {gameState !== GameState.Playing && (
           <button
@@ -343,7 +344,7 @@ function Game(props: GameProps) {
                 : ["⬛", "🟨", "🟩"];
               const score = gameState === GameState.Lost ? "X" : guesses.length;
               share(
-                "Result copied to clipboard!",
+                "Gemt i din udklipsholder!",
                 `${gameName} ${score}/${props.maxGuesses}\n` +
                   guesses
                     .map((guess) =>
@@ -355,7 +356,7 @@ function Game(props: GameProps) {
               );
             }}
           >
-            Share emoji results
+            Del dit resultat
           </button>
         )}
       </p>

@@ -43,7 +43,7 @@ function App() {
   const [difficulty, setDifficulty] = useSetting<number>("difficulty", 0);
   const [keyboard, setKeyboard] = useSetting<string>(
     "keyboard",
-    "qwertyuiop-asdfghjkl-BzxcvbnmE"
+    "qwertyuiopå-asdfghjklæø-BzxcvbnmE"
   );
   const [enterLeft, setEnterLeft] = useSetting<boolean>("enter-left", false);
 
@@ -78,9 +78,9 @@ function App() {
             fontStyle: difficulty > 1 ? "italic" : "inherit",
           }}
         >
-          hell
+
         </span>
-        o wordl
+        Fodbold wordle
       </h1>
       <div className="top-right">
         {page !== "game" ? (
@@ -88,7 +88,7 @@ function App() {
         ) : (
           <>
             {link("❓", "About", "about")}
-            {link("⚙️", "Settings", "settings")}
+            {/*{link("⚙️", "Settings", "settings")}*/}
           </>
         )}
       </div>
@@ -101,7 +101,7 @@ function App() {
         }}
       >
         <a href={seed ? "?random" : "?seed=" + todaySeed}>
-          {seed ? "Random" : "Today's"}
+          {seed ? "Random" : "Dagens"}
         </a>
       </div>
       {page === "about" && <About />}
